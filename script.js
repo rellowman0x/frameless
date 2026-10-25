@@ -223,6 +223,8 @@ function applyTheme(mode) {
   document.documentElement.dataset.theme = resolved;
   document.documentElement.classList.remove('mode-auto', 'mode-dark', 'mode-light');
   document.documentElement.classList.add('mode-' + mode); // управляет глифом кнопки
+  const tc = document.querySelector('meta[name="theme-color"]');
+  if (tc) tc.content = resolved === 'light' ? '#f4f4ef' : '#050505';
   $('#theme-lbl').textContent = mode; // auto | dark | light
   $('#theme-toggle').title = 'Тема: ' + ({ auto: 'авто (как в системе)', dark: 'тёмная', light: 'светлая' }[mode]);
 }
@@ -307,6 +309,32 @@ if (glow && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     });
   }, { passive: true });
 }
+
+// ---------- навигация: прогресс скролла, тень, активный раздел ----------
+const nav = $('.nav');
+const navProgress = $('#nav-progress');
+function onNavScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  navProgress.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+  nav.classList.toggle('scrolled', scrollY > 8);
+  // в hero ни один раздел не активен
+  const first = document.querySelector('section.section[id]');
+  if (first && scrollY + innerHeight * 0.5 < first.offsetTop) {
+    $$('.nav-links a.active').forEach(a => a.classList.remove('active'));
+  }
+}
+addEventListener('scroll', () => requestAnimationFrame(onNavScroll), { passive: true });
+addEventListener('resize', onNavScroll);
+onNavScroll();
+
+const navLinks = [...$$('.nav-links a[href^="#"]')];
+const sectionIO = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+$$('section.section[id]').forEach(s => sectionIO.observe(s));
 
 // ---------- лайтбокс скриншотов ----------
 const lb = $('#lightbox');
