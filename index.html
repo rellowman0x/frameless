@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>frameless — browser</title>
+  <meta name="description"
+    content="frameless — быстрый тёмный браузер для Windows на Chromium. Никакой рамки. Никакого шума.">
+  <link rel="icon" href="logo/7.png">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Тема по умолчанию — АВТО: применяем до первой отрисовки, без мигания.
+    // Приоритет: localStorage ('dark'/'light' от ручного выбора) → системная prefers-color-scheme.
+    (function () {
+      try {
+        var saved = localStorage.getItem('frameless-theme');
+        var mode = (saved === 'dark' || saved === 'light') ? saved : 'auto';
+        var resolved = mode === 'auto'
+          ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+          : mode;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.classList.add('mode-' + mode);
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+        document.documentElement.classList.add('mode-auto');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- фоновая сетка -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-square" aria-hidden="true"></span>
+        <span class="brand-text">frameless<i>.studio</i></span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="mono">01/возможности</a>
+        <a href="#shots" class="mono">02/скриншоты</a>
+        <a href="#install" class="mono">03/установка</a>
+        <a href="#tech" class="mono">04/tech</a>
+        <a href="#faq" class="mono">05/faq</a>
+        <button class="nav-gh nav-theme" id="theme-toggle" aria-label="Переключить тему" title="Тема: авто">
+          <svg class="tico tico-auto" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2A5.6 5.6 0 0 0 8 2.4Z" fill="currentColor" stroke="none"/></svg>
+          <svg class="tico tico-dark" viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M13.5 9.7A6 6 0 0 1 6.3 2.5a6 6 0 1 0 7.2 7.2Z"/></svg>
+          <svg class="tico tico-light" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="3"/><path d="M8 .8v2M8 13.2v2M.8 8h2M13.2 8h2M3 3l1.4 1.4M11.6 11.6 13 13M13 3l-1.4 1.4M4.4 11.6 3 13"/></svg>
+          <span class="theme-lbl mono" id="theme-lbl">auto</span>
+        </button>
+      <a class="nav-gh" href="https://github.com/rellowman0x/frameless--updater" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+            </svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="container">
+      <p class="hero-tag mono">&lt;browser/&gt; for windows — chromium inside, noise outside deleted</p>
+      <h1 class="hero-title">
+        <span class="line">браузер</span>
+        <span class="line line-accent">без&nbsp;рамок<span class="cursor mono">_</span></span>
+      </h1>
+      <p class="hero-sub">
+        Тёмный, быстрый, дерзкий. Вкладки, пароли под Windows Hello,
+        встроенный ИИ и автообновление — и&nbsp;ни грамма визуального шума.
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary js-download" href="https://github.com/rellowman0x/frameless--updater/releases/latest">
+          <span class="btn-label">скачать.exe</span>
+          <span class="btn-info mono">v<span class="js-dl-version">1.2.0</span> · <span
+              class="js-dl-size">…MB</span></span>
+        </a>
+        <a class="btn-ghost mono" href="#features">$ cat возможности</a>
+      </div>
+      <p class="hero-meta mono">
+        <span class="meta-dim">build</span> <span class="js-dl-version">1.2.0</span>
+        <span class="meta-dim">/</span> win 10·11 x64
+        <span class="meta-dim">/</span> nsis
+        <span class="meta-dim">/</span> <span data-os-note></span>
+      </p>
+    </div>
+
+    <!-- бегущая строка -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track mono">
+        <span>chromium engine</span><i>◆</i><span>no telemetry</span><i>◆</i><span>auto-update via github releases</span><i>◆</i><span>windows hello</span><i>◆</i><span>ad blocker</span><i>◆</i><span>built-in ai</span><i>◆</i><span>dark by default</span><i>◆</i>
+        <span>chromium engine</span><i>◆</i><span>no telemetry</span><i>◆</i><span>auto-update via github releases</span><i>◆</i><span>windows hello</span><i>◆</i><span>ad blocker</span><i>◆</i><span>built-in ai</span><i>◆</i><span>dark by default</span><i>◆</i>
+      </div>
+    </div>
+
+    <!-- ASCII/CSS мокап: терминальный стиль -->
+    <div class="container mock-wrap">
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="mb-title mono">frameless — new tab</span>
+          <span class="mb-btns mono"><i>—</i><i>□</i><i>×</i></span>
+        </div>
+        <div class="mock-omnibox mono"><span class="mb-lock">▸</span> frameless://newtab</div>
+        <div class="mock-body">
+          <div class="mock-hero mono">
+            <span class="mock-prompt">frameless@web ~ $</span> <span class="mock-type">open&nbsp;internet<span
+                class="tcur">▌</span></span>
+          </div>
+          <div class="mock-tiles">
+            <div class="tile"><span class="t-ico mono">⌘</span><span class="t-lbl mono">новая вкладка</span></div>
+            <div class="tile"><span class="t-ico mono">◉</span><span class="t-lbl mono">инкогнито</span></div>
+            <div class="tile"><span class="t-ico mono">✦</span><span class="t-lbl mono">ии-ассистент</span></div>
+            <div class="tile"><span class="t-ico mono">↻</span><span class="t-lbl mono">обновления</span></div>
+          </div>
+          <div class="mock-lines"><span style="--w:70%"></span><span style="--w:45%"></span><span
+              style="--w:85%"></span><span style="--w:30%"></span></div>
+        </div>
+        <div class="mock-statusbar mono"><span>● connected</span><span>chromium · electron 44</span><span>v<span class="js-dl-version">1.2.0</span></span></div>
+        <div class="mock-scanline" aria-hidden="true"></div>
+      </div>
+      <div class="mock-glow" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num mono">01</span>
+        <h2>Возможности<span class="accent">/</span></h2>
+      </div>
+      <div class="feat-list">
+        <article class="feat">
+          <span class="feat-idx mono">01</span>
+          <div class="feat-body">
+            <h3>Минимализм<span class="accent">.</span></h3>
+            <p>Тёмный интерфейс без визуального шума: тонкие рамки, спокойные цвета, ничего не мелькает и не отвлекает
+              от страниц.</p>
+          </div>
+          <span class="feat-tag mono">ui</span>
+        </article>
+        <article class="feat">
+          <span class="feat-idx mono">02</span>
+          <div class="feat-body">
+            <h3>Автообновление<span class="accent">.</span></h3>
+            <p>Проверяет релизы на GitHub при запуске и раз в 6 часов. Новая версия скачивается и ставится сама — в один
+              клик.</p>
+          </div>
+          <span class="feat-tag mono">auto</span>
+        </article>
+        <article class="feat">
+          <span class="feat-idx mono">03</span>
+          <div class="feat-body">
+            <h3>Приватность<span class="accent">.</span></h3>
+            <p>Пароли под Windows Hello, инкогнито без следов, блокировка рекламных кликандеров, ноль телеметрии.</p>
+          </div>
+          <span class="feat-tag mono">sec</span>
+        </article>
+        <article class="feat">
+          <span class="feat-idx mono">04</span>
+          <div class="feat-body">
+            <h3>Скорость<span class="accent">.</span></h3>
+            <p>Движок Chromium и лёгкая оболочка на Electron 44. Запуск мгновенный, вкладки не тормозят.</p>
+          </div>
+          <span class="feat-tag mono">fast</span>
+        </article>
+        <article class="feat">
+          <span class="feat-idx mono">05</span>
+          <div class="feat-body">
+            <h3>Встроенный ИИ<span class="accent">.</span></h3>
+            <p>Ассистент «МАУЗЕР»: GPT-4o, распознавание речи Whisper и голос Edge TTS — со своим ключом OpenAI.</p>
+          </div>
+          <span class="feat-tag mono">ai</span>
+        </article>
+        <article class="feat">
+          <span class="feat-idx mono">06</span>
+          <div class="feat-body">
+            <h3>Перенос данных<span class="accent">.</span></h3>
+            <p>Закладки и настройки из Chrome и Яндекс.Браузера импортируются при первом запуске.</p>
+          </div>
+          <span class="feat-tag mono">sync</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="shots">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num mono">02</span>
+        <h2>Скриншоты<span class="accent">/</span></h2>
+      </div>
+      <div class="shots">
+        <figure class="shot" data-sh>
+          <div class="shot-img">
+            <img src="screenshots/start.png" alt="Стартовая страница"
+              onerror="this.closest('.shot').classList.add('empty'); this.remove()">
+            <figcaption class="shot-empty mono">
+              <span>~/screenshots/start.png</span>
+              <em>404 · закинь файл — появится здесь</em>
+            </figcaption>
+          </div>
+          <figcaption class="shot-cap mono">> стартовая страница · поиск, погода, город</figcaption>
+        </figure>
+        <figure class="shot" data-sh>
+          <div class="shot-img">
+            <img src="screenshots/tabs.png" alt="Вкладки"
+              onerror="this.closest('.shot').classList.add('empty'); this.remove()">
+            <figcaption class="shot-empty mono">
+              <span>~/screenshots/tabs.png</span>
+              <em>404 · закинь файл — появится здесь</em>
+            </figcaption>
+          </div>
+          <figcaption class="shot-cap mono">> вкладки · закладки с папками · сессии</figcaption>
+        </figure>
+        <figure class="shot" data-sh>
+          <div class="shot-img">
+            <img src="screenshots/settings.png" alt="Настройки"
+              onerror="this.closest('.shot').classList.add('empty'); this.remove()">
+            <figcaption class="shot-empty mono">
+              <span>~/screenshots/settings.png</span>
+              <em>404 · закинь файл — появится здесь</em>
+            </figcaption>
+          </div>
+          <figcaption class="shot-cap mono">> настройки · акцент и паки иконок</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- лайтбокс: клик по скриншоту — полноэкранный просмотр -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close mono" aria-label="Закрыть">× close</button>
+    <button class="lb-nav lb-prev" aria-label="Предыдущий">←</button>
+    <figure class="lb-stage">
+      <img src="" alt="">
+      <figcaption class="mono lb-cap"></figcaption>
+    </figure>
+    <button class="lb-nav lb-next" aria-label="Следующий">→</button>
+  </div>
+</div>
+
+<section class="section" id="install">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num mono">03</span>
+        <h2>Установка<span class="accent">/</span></h2>
+      </div>
+      <div class="install-grid">
+        <div class="steps">
+          <div class="step">
+            <div class="step-marker mono">[1]</div>
+            <div>
+              <h3 class="mono">скачать установщик</h3>
+              <p>Официальный <code class="mono">frameless-Setup-&lt;версия&gt;.exe</code> из GitHub Releases.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-marker mono">[2]</div>
+            <div>
+              <h3 class="mono">запустить</h3>
+              <p>Мастер установки, ярлыки на рабочем столе и в «Пуске». Данные из старого браузера подтянутся сами.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-marker mono">[3]</div>
+            <div>
+              <h3 class="mono">забыть про апдейты</h3>
+              <p>Браузер сам проверяет релизы каждые 6 часов и обновляется поверх старой версии.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="install-side">
+          <a class="btn-primary js-download big"
+            href="https://github.com/rellowman0x/frameless--updater/releases/latest">
+            <span class="btn-label">Windows x64.exe</span>
+            <span class="btn-info mono">v<span class="js-dl-version">1.2.0</span> · <span
+                class="js-dl-size">…MB</span></span>
+          </a>
+          <p class="side-note mono"># только Windows 10/11 x64.<br># macOS и Linux не планируется.</p>
+          <p class="side-os mono" data-os-note></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tech">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num mono">04</span>
+        <h2>Техническое<span class="accent">/</span></h2>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-left">
+          <div class="kv mono">
+            <div class="kv-row"><span>version</span><b id="t-version">1.2.0</b></div>
+            <div class="kv-row"><span>channel</span><b>stable</b></div>
+            <div class="kv-row"><span>platform</span><b>windows x64 · nsis</b></div>
+            <div class="kv-row"><span>size</span><b id="t-size">—</b></div>
+            <div class="kv-row"><span>released</span><b id="t-date">—</b></div>
+            <div class="kv-row"><span>asset</span><b id="t-asset">frameless-Setup-1.2.0.exe</b></div>
+          </div>
+          <p class="status mono" id="update-status"><span class="st-dot"></span>checking latest release…</p>
+          <div class="tech-actions">
+            <button class="btn-ghost mono" id="check-updates">[ проверить обновления ]</button>
+            <button class="btn-ghost mono" id="copy-release">[ копировать ссылку ]</button>
+            <a class="btn-ghost mono" id="release-notes-link"
+              href="https://github.com/rellowman0x/frameless--updater/releases" target="_blank" rel="noopener">[ release
+              notes ]</a>
+          </div>
+          <div class="whats-new" id="whats-new" hidden>
+            <p class="wn-head mono"># what's new — <span id="whats-new-ver"></span></p>
+            <pre class="mono" id="whats-new-body"></pre>
+          </div>
+        </div>
+        <div class="term">
+          <div class="term-head mono"><span class="tdot"></span>api.github.com — GET /releases</div>
+          <pre class="mono" id="terminal-json">GET https://api.github.com/repos/rellowman0x/frameless--updater/releases?per_page=1
+
+загрузка…</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container container-narrow">
+      <div class="sec-head">
+        <span class="sec-num mono">05</span>
+        <h2>FAQ<span class="accent">/</span></h2>
+      </div>
+      <details class="qa">
+        <summary class="mono">q: это бесплатно?<span class="qa-mark">+</span></summary>
+        <p>Да. Frameless Studio полностью бесплатен.</p>
+      </details>
+      <details class="qa">
+        <summary class="mono">q: где исходники?<span class="qa-mark">+</span></summary>
+        <p>Исходный код закрыт и не публикуется. Репозиторий используется для релизов, документации и багов.</p>
+      </details>
+      <details class="qa">
+        <summary class="mono">q: как обновляется?<span class="qa-mark">+</span></summary>
+        <p>Автоматически: при запуске и раз в 6 часов браузер проверяет GitHub Releases. Новая версия скачивается и
+          ставится сама.</p>
+      </details>
+      <details class="qa">
+        <summary class="mono">q: есть macOS или linux?<span class="qa-mark">+</span></summary>
+        <p>Нет. Только Windows 10/11 (x64), NSIS-установщик <code class="mono">frameless-Setup-x.y.z.exe</code>.
+          Портативной версии тоже нет.</p>
+      </details>
+      <details class="qa">
+        <summary class="mono">q: системные требования?<span class="qa-mark">+</span></summary>
+        <p>Windows 10 или 11 (x64). Для ИИ-ассистента — свой ключ OpenAI.</p>
+      </details>
+      <details class="qa">
+        <summary class="mono">q: безопасно ли качать .exe?<span class="qa-mark">+</span></summary>
+        <p>Установщик без цифровой подписи — Defender/Kaspersky могут ругаться, это ложное срабатывание. Качайте только
+          из официальных релизов репозитория.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="brand-square" aria-hidden="true"></span>
+      <nav class="footer-links mono">
+        <a href="https://github.com/rellowman0x/frameless--updater" target="_blank"
+          rel="noopener">github</a><span>/</span>
+        <a href="https://github.com/rellowman0x/frameless--updater/releases" target="_blank"
+          rel="noopener">releases</a><span>/</span>
+        <a href="https://github.com/rellowman0x/frameless--updater/issues" target="_blank"
+          rel="noopener">issues</a><span>/</span>
+        <a href="https://github.com/rellowman0x/frameless--updater/blob/main/README.md" target="_blank"
+          rel="noopener">docs</a>
+      </nav>
+      <p class="footer-meta mono" id="footer-meta"></p>
+      <p class="footer-copy mono">© 2026 rellowman — frameless.studio</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
